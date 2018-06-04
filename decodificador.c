@@ -4,8 +4,9 @@
 
 int main () {
     char mensagem[200], *texto;
-    scanf("%s", mensagem);
+    fgets(mensagem, 200 * sizeof(char), stdin);
     texto = descriptografaTexto(mensagem);
     printf("%s", texto);
+    free(texto);
     return 0;
 }

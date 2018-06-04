@@ -7,7 +7,8 @@ int main () {
     char *destino;
     int p, q;
     //scanf("%s%s%s%d%d", nomeImg, mensagem, nomeImgResult, &p, &q);
-    scanf("%s%d%d", mensagem, &p, &q);
+    fgets(mensagem, 200 * sizeof(char), stdin);
+    scanf("%d%d",&p, &q);
     destino = criptografaTexto(mensagem, p, q);
     printf("\n%s\n", destino);
     free(destino);

@@ -13,8 +13,8 @@ int codificaBloco(int numero, int e, int n);
 char* criptografaTexto(char *mensagem, int p, int q);
 
 char* descriptografaTexto(char *mensagem) {
-    int *vetor, d, n;
-    char *textoDescriptografado;
+    int *vetor, d, n, k=0;
+    char *textoDescriptografado, *stringAsc;
     vetor = leChave();
     n = vetor[0];
     d = vetor[1];
@@ -22,23 +22,18 @@ char* descriptografaTexto(char *mensagem) {
 
     textoDescriptografado = (char*) malloc(0*sizeof(char));
 
-    printf("\n%s\n size = %d", mensagem, strlen(mensagem));
-
     for (int i=0; i<strlen(mensagem); i++) {
         int valor = 0, valorAnterior, j=0, vl;
         char *valorString, *aux;
         while (valor < n && valor > -1 && vl > -1) {
             valorAnterior = valor;
             vl = mensagem[i] - '0';
-            printf("\ni = %d char = %c int = %d", i, mensagem[i], vl);
             valor *= 10;
             valor += vl;
             i++;
         }
         i-=2;
-        printf("\n%d\n", valorAnterior);
         valor = codificaBloco(valorAnterior, d, n);
-        printf("\nfinal: %d\n", valor);
         valorString = toString(valor);
         aux = textoDescriptografado;
         free(textoDescriptografado);
@@ -46,14 +41,30 @@ char* descriptografaTexto(char *mensagem) {
         for (j; j<strlen(aux); j++) {
            textoDescriptografado[j] = aux[j];
         }
-        for (int k=0; k<strlen(valorString); j++,k++) {
+        for (k=0; k<strlen(valorString); j++,k++) {
            textoDescriptografado[j] = valorString[k];
         }
         textoDescriptografado[j] = '\0';
         free(aux);
     }
 
-    return textoDescriptografado;
+    stringAsc = (char*) malloc((strlen(textoDescriptografado)/2) * sizeof(char));
+
+    for (int i=0, k=0; i<strlen(textoDescriptografado); i+=2, k++) {
+        int valor;
+        valor = textoDescriptografado[i] - '0';
+        valor *= 10;
+        valor += textoDescriptografado[i+1] - '0';
+        stringAsc[k] = valor;
+    }
+    if (strlen(textoDescriptografado) % 2 != 0) {
+        k++;
+    }
+    stringAsc[k] ='\0';
+
+    free(textoDescriptografado);
+
+    return stringAsc;
 }
 
 int toInt(char* string) {
@@ -124,6 +135,7 @@ char* criptografaTexto(char *mensagem, int p, int q) {
         free(valor);
         free(aux);
     }
+
     textoCriptografado = (char*) malloc(0*sizeof(char));
 
     for (int i=0; i<strlen(string); i++) {
